@@ -1,0 +1,15 @@
+{
+    "valid_user": {
+        "username": "standard_user",
+        "password": "secret_sauce"
+    },
+    "locked_out_user": {
+        "username": "locked_out_user",
+        "password": "secret_sauce"
+    },
+    "customer": {
+        "first_name": "Rohan",
+        "last_name": "QA",
+        "postal_code": "12345"
+    }
+}
