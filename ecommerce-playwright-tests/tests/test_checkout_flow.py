@@ -1,59 +1,47 @@
-from playwright.sync_api import sync_playwright
+import os
+import sys
+import json
+import pytest
+from playwright.sync_api import expect
 
+# Add mapping to pages folder for Python execution (Not strictly needed for Pytest but good safety net)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-def __init__(self, page: Page):
-    self.page = page
-    self.username_input = page.locator("xpath=//*[@id='user-name']")
-    self.password_input = page.locator("xpath=//*[@id='password']")
-    self.login_button = page.locator("xpath=//*[@id='login-button']")
-    self.add_to_cart_button = page.locator("xpath=//*[@id='add-to-cart-sauce-labs-backpack']")
-    self.cart_icon = page.locator("xpath=//*[@class='shopping_cart_link']")
-    self.checkout_button = page.locator("xpath=//*[@id='checkout']")
-    self.first_name_input = page.locator("xpath=//*[@id='first-name']")
-    self.last_name_input = page.locator("xpath=//*[@id='last-name']")
-    self.zip_code_input = page.locator("xpath=//*[@id='postal-code']")
-    self.continue_button = page.locator("xpath=//*[@id='continue']")
-    self.finish_button = page.locator("xpath=//*[@id='finish']")
+from pages.log_in_page import LogInPage
+from pages.add_to_cart import AddToCartPage
+from pages.your_information_page import YourInformationPage
+from pages.overview_page import OverviewPage
+from pages.complete_page import CompletePage
 
-def test_checkout_flow():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=1000)
-        page = browser.new_page()
-        page.goto("https://www.saucedemo.com")
+def test_complete_checkout_flow(page):
+    # Load test data manually from the file for now
+    data_path = os.path.join(os.path.dirname(__file__), '..', 'test_data.json')
+    with open(data_path, "r") as f:
+        test_data = json.load(f)
 
-        self.username_input.fill("standard_user")
-        self.password_input.fill("secret_sauce")
-        self.login_button.click()
-        page.wait_for_url("https://www.saucedemo.com/inventory.html")
-        assert page.title() == "Swag Labs"  
-        print("Login successful")
-        page.wait_for_timeout(5000)
+    # Initialize Page Objects using your actual classes
+    login_page = LogInPage(page)
+    add_to_cart_page = AddToCartPage(page)
+    info_page = YourInformationPage(page)
+    overview_page = OverviewPage(page)
+    complete_page = CompletePage(page)
 
-        self.add_to_cart_button.click()
-        self.cart_icon.click()
-        self.checkout_button.click()
-        page.wait_for_url("https://www.saucedemo.com/checkout-step-one.html")
-        assert page.title() == "Swag Labs"  
-        print("Add to cart successful")
-        page.wait_for_timeout(5000)
-
-        self.first_name_input.fill("John")
-        self.last_name_input.fill("Doe")
-        self.zip_code_input.fill("12345")
-        self.continue_button.click()
-        page.wait_for_url("https://www.saucedemo.com/checkout-step-two.html")
-        assert page.title() == "Swag Labs"  
-        print("Fill your information successful")
-        page.wait_for_timeout(5000)
-
-        self.finish_button.click()
-        page.wait_for_url("https://www.saucedemo.com/checkout-complete.html")
-        assert page.title() == "Swag Labs"  
-        print("Finish successful")
-        page.wait_for_timeout(5000)
+    # 1. Login
+    page.goto("https://www.saucedemo.com")
+    login_page.login(test_data["username"], test_data["password"])
+    page.wait_for_url("https://www.saucedemo.com/inventory.html")
     
-        
-        browser.close()
-
-if __name__ == "__main__":
-    test_checkout_flow()
+    # 2. Add an item to the cart & go to cart
+    add_to_cart_page.add_to_cart()
+    page.wait_for_url("https://www.saucedemo.com/checkout-step-one.html")
+    
+    # 3. Fill out checkout form
+    info_page.fill_your_information()
+    page.wait_for_url("https://www.saucedemo.com/checkout-step-two.html")
+    
+    # 4. Finish checkout
+    overview_page.finish()
+    page.wait_for_url("https://www.saucedemo.com/checkout-complete.html")
+    
+    # 5. Verify order complete
+    assert complete_page.back_to_products_button.is_visible()

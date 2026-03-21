@@ -1,35 +1,32 @@
-from playwright.sync_api import sync_playwright
+import sys
+import os
+import json
 
+# Add the project directory to sys.path so python can find "pages"
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-def __init__(self, page: Page):
-    self.page = page
-    self.username_input = page.locator("xpath=//*[@id='user-name']")
-    self.password_input = page.locator("xpath=//*[@id='password']")
-    self.login_button = page.locator("xpath=//*[@id='login-button']")
-    self.menu_button = page.locator("xpath=//*[@id='react-burger-menu-btn']")
-    self.logout_button = page.locator("xpath=//*[@id='logout_sidebar_link']")
+from pages.log_in_page import LogInPage
+from pages.log_out import LogOutPage
 
-def test_log_out():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=1000)
-        page = browser.new_page()
-        page.goto("https://www.saucedemo.com")
-        browser.close()
+data_path = os.path.join(os.path.dirname(__file__), '..', 'test_data.json')
+with open(data_path, "r") as f:
+    test_data = json.load(f)
+    username = test_data["username"]
+    password = test_data["password"]
 
-        self.username_input.fill("standard_user")
-        self.password_input.fill("secret_sauce")
-        self.login_button.click()
-        page.wait_for_url("https://www.saucedemo.com/inventory.html")
-        assert page.title() == "Swag Labs"  
-        print("Login successful")
-        page.wait_for_timeout(5000)
-
-        self.menu_button.click()
-        self.logout_button.click()
-        page.wait_for_url("https://www.saucedemo.com")
-        assert page.title() == "Swag Labs"  
-        print("Log out successful")
-        page.wait_for_timeout(5000)
-
-if __name__ == "__main__":
-    test_log_out()
+def test_log_out(page):
+    page.goto("https://www.saucedemo.com")
+    
+    # Log in first
+    log_in_page = LogInPage(page)
+    log_in_page.login(username, password)
+    page.wait_for_url("https://www.saucedemo.com/inventory.html")
+    
+    # Log out
+    log_out_page = LogOutPage(page)
+    log_out_page.log_out()
+    
+    # Assert successful logout by checking the URL returns to the login page
+    page.wait_for_url("https://www.saucedemo.com/")
+    assert page.title() == "Swag Labs"  
+    print("Log out successful")

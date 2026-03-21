@@ -18,20 +18,12 @@ with open(data_path, "r") as f:
     username = test_data["username"]
     password = test_data["password"]
 
-def test_log_in():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=1000)
-        page = browser.new_page()
-        page.goto("https://www.saucedemo.com")
-        log_in_page = LogInPage(page)
-        log_in_page.test_error_message(page)
-        log_in_page.login(username, password)
-        page.wait_for_url("https://www.saucedemo.com/inventory.html")
-        assert page.title() == "Swag Labs"  
-        print("Login successful")
-        page.wait_for_timeout(5000)
-
-        
-
-if __name__ == "__main__":
-    test_log_in()
+def test_log_in(page):
+    page.goto("https://www.saucedemo.com")
+    log_in_page = LogInPage(page)
+    log_in_page.test_error_message(page)
+    log_in_page.login(username, password)
+    page.wait_for_url("https://www.saucedemo.com/inventory.html")
+    assert page.title() == "Swag Labs"  
+    print("Login successful")
+    page.wait_for_timeout(5000)
