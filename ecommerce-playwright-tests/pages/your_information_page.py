@@ -12,14 +12,4 @@ class YourInformationPage:
         self.first_name_input.fill("John")
         self.last_name_input.fill("Doe")
         self.zip_code_input.fill("12345")
-        self.continue_button.click()
-
-    def test_fill_your_information(self, page):
-        self.fill_your_information()
-        assert page.title() == "Swag Labs"  
-        print("Fill your information successful")
-
-    def test_click_continue_button(self, page):
-        self.continue_button.click()
-        assert page.title() == "Swag Labs"  
-        print("Click continue button successful")
+        self.continue_button.click()

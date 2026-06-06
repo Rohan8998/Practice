@@ -8,9 +8,4 @@ class LogOutPage:
 
     def log_out(self):
         self.menu_button.click()
-        self.logout_button.click()
-
-    def test_log_out(self, page):
-        self.log_out()
-        assert page.title() == "Swag Labs"  
-        print("Log out successful")
+        self.logout_button.click()

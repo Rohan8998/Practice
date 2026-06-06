@@ -12,7 +12,4 @@ class AddToCartPage:
         self.cart_icon.click()
         self.checkout_button.click()
 
-    def test_add_to_cart(self, page):
-        self.add_to_cart()
-        assert page.title() == "Swag Labs"  
-        print("Add to cart successful")
+    

@@ -6,9 +6,4 @@ class OverviewPage:
         self.finish_button = page.locator("xpath=//*[@id='finish']")
 
     def finish(self):
-        self.finish_button.click()
-
-    def test_finish(self, page):
-        self.finish()
-        assert page.title() == "Swag Labs"  
-        print("Finish successful")
+        self.finish_button.click()

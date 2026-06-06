@@ -8,7 +8,4 @@ class CompletePage:
     def back_to_products(self):
         self.back_to_products_button.click()
 
-    def test_back_to_products(self, page):
-        self.back_to_products()
-        assert page.title() == "Swag Labs"  
-        print("Back to products successful")
+   

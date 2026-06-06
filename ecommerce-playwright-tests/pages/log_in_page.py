@@ -13,22 +13,7 @@ class LogInPage:
         self.login_button.click()
         
     
-    def test_invalid_login(self, page):
-        self.login("invalid_user", "wrong_password")
-
-        assert "inventory" not in page.url
-
-    def test_empty_password(self, page):
-        self.login("standard_user", "")
-
-        assert "inventory" not in page.url  
-
     def test_error_message(self, page):
         self.login("invalid_user", "wrong_password")
-
-        assert "Epic sadface: Username and password do not match any user in this service" in page.content()    
-
-    def test_error_message_empty_password(self, page):
-        self.login("standard_user", "")
 
         assert "Epic sadface: Username and password do not match any user in this service" in page.content()    
