@@ -116,5 +116,45 @@ for ch in text:
 print(freq)
 
 
+text = input("Enter the sting: ")
+vowels_present = []
+other_letters = []
+vowels="aeiouAEIOU"
 
+for i in text:
+    if i in vowels:
+        vowels_present.append(i)
+    else:
+        other_letters.append(i)
+
+
+print(f"Vowerls:{vowels_present}")
+print(f"Other letters:{other_letters}")
+
+
+
+freq = {}
+
+for ch in vowels_present:
+    freq[ch]= freq.get(ch,0) + 1
+
+print(f"Vowels counts: {freq}")    
+
+
+
+nums = ["123","2132","3121","4231","5312","212","123"]
+nums.sort()
+print(nums)    
+print(f"The Second smallest: {nums[-2]}")
+
+
+
+
+
+value = int(input("ENter the Vlaue to calculate Factorial: "))
+
+for i in range (1, value +1):
+    fact = fact * i
+
+print (f"Factoral of {value} is:{fact}")
 
