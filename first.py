@@ -1,5 +1,5 @@
 print("Hellow world")
-'''
+
 N1 = input("Hello Please Enter 1st Number: ")
 N2 = input("Hello Please Enter 2nd Number: ")
 
@@ -20,7 +20,7 @@ Fullname = Firstname + Lastname
 
 print(f"Hello {Firstname} {Lastname} Welcome to my first Program")
 print(f"This my Fullname: {Fullname}")
-''' 
+
 
 S1 = "Tree"
 s2 = ""
@@ -145,7 +145,9 @@ print(f"Vowels counts: {freq}")
 nums = ["123","2132","3121","4231","5312","212","123"]
 nums.sort()
 print(nums)    
+print(max(nums))
 print(f"The Second smallest: {nums[-2]}")
+
 
 
 
@@ -158,3 +160,20 @@ for i in range (1, value +1):
 
 print (f"Factoral of {value} is:{fact}")
 
+
+
+w2 = input("Enter the Sentence: ")
+
+w2.split()
+print(f"The Number of word: {w2}")
+
+
+
+
+words = "Hello World"
+q = words.split()
+print(q)
+reversed_words = [word[::-1] for word in q]
+print(reversed_words)
+result = " ".join(reversed_words)
+print(result)
